@@ -34,7 +34,7 @@ app.use(bodyParser.json());
 //Route to index.html
 router.get('/', function(req,res){
     //res.sendFile(path.join(__dirname+'/index.html'));
-    var title = "Welcome to the GameApp Page";
+    //var title = "Welcome to the GameApp Page";
 
     res.render('index', {
         title:title
@@ -43,21 +43,28 @@ router.get('/', function(req,res){
 
 //Route to entries.html
 router.get('/entries', function(req,res){
-    res.sendFile(path.join(__dirname+'/entries.html'));
+    //res.sendFile(path.join(__dirname+'/entries.html'));
+    res.render('gameentries/addgame');
 });
 
-app.get('/getdata', function(req, res){
-    console.log("request made from fetch.");
+//Route to login.html
+router.get('/login', function(req,res){
+    //res.sendFile(path.join(__dirname+'/login.html'));
+    res.render('login');
+});
+
+app.get('/', function(req, res){
+    //console.log("request made from fetch.");
     Entry.find({})
     .then(function(entries){
-        res.send({
+        res.render('index', {
             entries:entries
-        })
-    })
+        });
+    });
 });
 
 //post from on index.html
-app.post('/', function(req,res){
+app.post('/addgame', function(req,res){
     console.log(req.body);
     var newEntry = {
         title:req.body.title,
@@ -66,6 +73,15 @@ app.post('/', function(req,res){
     new Entry(newEntry)
     .save().then(function(entry){
         res.redirect('/')
+    });
+});
+
+//Delete Game Entry
+app.post('/:id', function(req, res){
+    Entry.remove({_id:req.params.id})
+    .then(function(){
+        //req.flash("game removed");
+        res.redirect('/');
     });
 });
 
