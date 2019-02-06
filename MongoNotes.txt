@@ -1,0 +1,34 @@
+show dbs - shows the databases
+db.createUser() -- creates createUser
+db.createCollection -- creates the collection or db
+
+JSON Notation
+{
+    player-name:"Alexandra",
+    player-lastname: "deCastro",
+    game-sessions:["ses1", "ses2"], -- an array
+    contact-info{
+        login:"adecastro",
+        email:"adecastro@email.neit.edu",
+        city:"Fall River"
+    }
+
+    email-addresses:[ ---- creates a collection of information
+        {email:"emailaddress", name:"name"},
+        {email:"emailaddress", name:"name"},
+
+    ]
+}
+db.players.insert({first_name:"name", last_name:"lastname"}) - inserts record
+db.players.find() --- finds records
+db.players.find().pretty() --- makes it look better
+db.players.update({first_name:"Donna"}, {first_name:"Donna", last_name:"Adella", age: "31"}) --- updates user
+db.players.update({first_name:"Donna"}, {$unset:{age:1}}) --- removes individual entry from user & reminder: must set variable to 1
+db.players.update({first_name:"Donna"}, {$set:{age:33}}) --- adds entry without modifying current data
+db.players.update({first_name:"Dennezcia"}, {first_name:"Dennezcia", last_name:"McCarty", age:32}, {upsert:true}) -- updates user that doesn't exist in db
+
+db.players.remove({first_name:"Donna"}, {justOne:true}); -- removes entire entry
+db.players.update({first_name:"Donna"}, {$rename:{"age":"years_since_birth"}}) -- renames entry name
+db.players.find().sort({"entry_name"}) --- sorts database by the specificed entry
+ctrl + c - exit out terminal target
+cls - clear terminal command
