@@ -31,7 +31,7 @@ app.set('view engine', 'handlebars');
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-//Route to index.html
+//Route to index
 router.get('/', function(req,res){
     //res.sendFile(path.join(__dirname+'/index.html'));
     //var title = "Welcome to the GameApp Page";
@@ -44,7 +44,32 @@ router.get('/', function(req,res){
 //Route to entries.html
 router.get('/entries', function(req,res){
     //res.sendFile(path.join(__dirname+'/entries.html'));
-    res.render('gameentries/addgame');
+   res.render('gameentries/addgame');
+});
+
+//Route to Edit Game Entries
+router.get('/gameentries/edit/:id', function(req,res){
+    //res.sendFile(path.join(__dirname+'/entries.html'));
+    
+    Entry.findOne({
+        _id:req.params.id
+    }).then(function(entry){
+        res.render('gameentries/editgame', {entry:entry});
+    });
+});
+
+//Route to put edited entry
+router.post('/editgame/:id', function(req,res){
+    Entry.findOne({
+        _id:req.params.id
+    }).then(function(entry){
+        entry.title = req.body.title;
+        entry.genre = req.body.genre;
+
+        entry.save().then(function(idea){
+            res.redirect('/')
+        })
+    });
 });
 
 //Route to login.html
