@@ -1,22 +1,22 @@
 <div class="card card-body">
     <div class="row">
-        <div class="col-md-6-auto">
+        <div class="col-md-6 mx-auto">
 <form>
   <div class="form-group">
-    <label for="exampleInputEmail1">Login</label>
-    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter username">
-    <small id="emailHelp" class="form-text text-muted">We'll never share your password with anyone else.</small>
+    <label for="exampleInputEmail1">Enter Email</label>
+    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter Email" name="email" value="{{email}}" required>
   </div>
   <div class="form-group">
-    <label for="exampleInputPassword1">Password</label>
-    <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                    <label for="exampleInputPassword1">Enter Password</label>
+                    <input type="password" class="form-control" name="password" id="exampleInputPassword1" placeholder="Enter Password" value="{{password}}" required>
   </div>
   <div class="form-group form-check">
     <input type="checkbox" class="form-check-input" id="exampleCheck1">
-    <label class="form-check-label" for="exampleCheck1">Check me out</label>
+    <label class="form-check-label" for="exampleCheck1">Keep me signed in</label>
   </div>
-  <button type="submit" class="btn btn-primary">Submit</button>
-</form>
+  <button type="submit" class="btn btn-primary">Login</button>
+  <small> Need to Register? </small><a href="/users/register">Sign-Up</a>
+  </form>
 </div>
 </div>
 </div>
