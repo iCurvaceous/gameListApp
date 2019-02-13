@@ -30,7 +30,9 @@ mongoose.connect("mongodb://localhost:27017/gameentries",{
 
 //Load in Entry Model
 require('./models/Entry');
+require('./models/Users');
 var Entry = mongoose.model('Entries');
+var Users = mongoose.model('Users');
 
 //sets up handlebars
 app.engine('handlebars', exphbs({
@@ -77,7 +79,7 @@ router.get('/', ensureAuthenticated, function(req,res){
 //Route to entries.html
 router.get('/entries', function(req,res){
     //res.sendFile(path.join(__dirname+'/entries.html'));
-   res.render('gameentries/addgame');
+   res.render('gameentries/addgame', {user:req.user});
 });
 
 //Route to Edit Game Entries
@@ -87,7 +89,10 @@ router.get('/gameentries/edit/:id', function(req,res){
     Entry.findOne({
         _id:req.params.id
     }).then(function(entry){
-        res.render('gameentries/editgame', {entry:entry});
+        res.render('gameentries/editgame', {
+            entry:entry,
+            user:req.user
+        });
     });
 });
 
@@ -111,6 +116,10 @@ router.get('/login', function(req,res){
     res.render('login');
 });
 
+router.get('/logout', function(req, res){
+    req.logout();
+    res.redirect();
+});
 router.post('/login', function(req,res, next){
     passport.authenticate('local', {
         successRedirect:'/',
@@ -118,12 +127,25 @@ router.post('/login', function(req,res, next){
     })(req,res,next);
 });
 
+//index route
 app.get('/', ensureAuthenticated, function(req, res){
     //console.log("request made from fetch.");
-    Entry.find({})
+    Entry.find({user:req.user.id})
     .then(function(entries){
         res.render('index', {
+            user:req.user,
             entries:entries
+        });
+    });
+});
+
+//gamers route
+app.get('/gamers', function(req, res){
+    //console.log("request made from fetch.");
+    Users.find({})
+    .then(function(users){
+        res.render('gamers', {
+            users:users
         });
     });
 });
@@ -133,7 +155,8 @@ app.post('/addgame', function(req,res){
     console.log(req.body);
     var newEntry = {
         title:req.body.title,
-        genre:req.body.genre
+        genre:req.body.genre,
+        user:req.user.id
     }
     new Entry(newEntry)
     .save().then(function(entry){
