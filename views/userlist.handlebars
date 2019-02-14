@@ -1,0 +1,25 @@
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <div class="card-body">
+            <div class= "jumbotron text-centered">
+                <h1>Welcome to the GameApp Page!</h1>
+                <p>These are their current favourite games.</p>
+                <ul class="list-group list-group-flush"></ul>
+                {{#each entries}}
+                <div class='entries'>
+                <li class="list-group-item">
+                    <p class="font-weight-bold">Game:{{title}}</p>
+                    <p>Genre:{{genre}}</p>
+                    <p>Date:{{date}}</p>
+
+                </li>
+                </div>
+                <br>
+                {{else}}
+                <p>They have no entries.</p>
+                {{/each}}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

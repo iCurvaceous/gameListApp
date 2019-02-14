@@ -62,18 +62,10 @@ app.use(passport.session());
 //configure flash messages
 //app.use(flash());
 
-/*app.use(function(req,res){
-    res.locals.success_msg =
-});*/
-
-//Route to index
-router.get('/', ensureAuthenticated, function(req,res){
-    //res.sendFile(path.join(__dirname+'/index.html'));
-    //var title = "Welcome to the GameApp Page";
-
-    res.render('index', {
-        title:title
-    });
+//global variables
+app.use(function(req,res, next){
+    res.locals.user = req.user || null;
+    next();
 });
 
 //Route to entries.html
@@ -105,7 +97,17 @@ router.put('/editgame/:id', function(req,res){
         entry.genre = req.body.genre;
 
         entry.save().then(function(idea){
-            res.redirect('/')
+            res.redirect('/gamers')
+        })
+    });
+});
+
+router.get('/userlist/:id', function(req,res){
+    Entry.find({
+        user:req.params.id //params because you do not want to be logged in
+    }).then(function(entries){
+        res.render('userlist', {
+            entries:entries
         })
     });
 });
@@ -118,29 +120,28 @@ router.get('/login', function(req,res){
 
 router.get('/logout', function(req, res){
     req.logout();
-    res.redirect();
+    res.redirect('/login');
 });
 router.post('/login', function(req,res, next){
     passport.authenticate('local', {
-        successRedirect:'/',
+        successRedirect:'/gamers',
         failureRedirect:'/login'
     })(req,res,next);
 });
 
-//index route
-app.get('/', ensureAuthenticated, function(req, res){
+//gamers route
+app.get('/gamers', ensureAuthenticated, function(req, res){
     //console.log("request made from fetch.");
     Entry.find({user:req.user.id})
     .then(function(entries){
         res.render('index', {
-            user:req.user,
             entries:entries
         });
     });
 });
 
-//gamers route
-app.get('/gamers', function(req, res){
+//index route
+app.get('/', function(req, res){
     //console.log("request made from fetch.");
     Users.find({})
     .then(function(users){
@@ -160,7 +161,7 @@ app.post('/addgame', function(req,res){
     }
     new Entry(newEntry)
     .save().then(function(entry){
-        res.redirect('/')
+        res.redirect('/gamers')
     });
 });
 
@@ -169,7 +170,7 @@ app.delete('/:id', function(req, res){
     Entry.remove({_id:req.params.id})
     .then(function(){
         //req.flash("game removed");
-        res.redirect('/');
+        res.redirect('/gamers');
     });
 });
 
