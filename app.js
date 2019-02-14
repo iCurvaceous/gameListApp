@@ -60,10 +60,13 @@ app.use(passport.session());
 
 
 //configure flash messages
-//app.use(flash());
+app.use(flash());
 
 //global variables
 app.use(function(req,res, next){
+    res.locals.success_msg = req.flash('success_msg');
+    res.locals.error_msg = req.flash('error_msg');
+    res.locals.error = req.flash('error');
     res.locals.user = req.user || null;
     next();
 });
@@ -120,12 +123,15 @@ router.get('/login', function(req,res){
 
 router.get('/logout', function(req, res){
     req.logout();
+    req.flash('success_msg', "You are logged out.");
     res.redirect('/login');
+    
 });
 router.post('/login', function(req,res, next){
     passport.authenticate('local', {
         successRedirect:'/gamers',
-        failureRedirect:'/login'
+        failureRedirect:'/login',
+        failureFlash: true
     })(req,res,next);
 });
 
@@ -169,7 +175,7 @@ app.post('/addgame', function(req,res){
 app.delete('/:id', function(req, res){
     Entry.remove({_id:req.params.id})
     .then(function(){
-        //req.flash("game removed");
+        req.flash('success_msg', "game removed");
         res.redirect('/gamers');
     });
 });

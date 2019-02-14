@@ -36,7 +36,8 @@ router.post('/register', function(req,res){
         User.findOne({email:req.body.email})
         .then(function(user){
             if(user){
-            //add flash message that user exists
+            //added flash message that user exists
+            req.flash('error_msg', 'email already exists');
             res.redirect('/users/register');
             } else {
                 var newUser = new User({
@@ -51,6 +52,8 @@ router.post('/register', function(req,res){
                         newUser.password = hash;
                         newUser.save()
                         .then(function(user){
+                            //flash message that user registered
+                            req.flash('success_msg', 'You are now a registered user.');
                             res.redirect('/login');
                         }).catch(function(err){
                         console.log(err);
